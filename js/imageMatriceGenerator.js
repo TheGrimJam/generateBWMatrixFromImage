@@ -1,3 +1,21 @@
+/*
+* This is a little kludgey as the purpose changed halfway in
+*/
+
+function dump(obj) {
+    /*
+    * output the matrix by hand
+    * 
+    */
+    var out = '';
+    for (var i in obj) {
+        out += obj[i] + "]\n[";
+    }
+    out = out.substring(0, out.length - 3);
+    var pre = document.createElement('div');
+    pre.innerHTML = "[[" + out + "]]";
+    document.getElementById('test-output').appendChild(pre)
+}
 
 class targetImage {
     constructor(imageNode){
@@ -5,16 +23,44 @@ class targetImage {
         this.width = imageNode.offsetWidth;
         this.node = imageNode;
         this.node.crossOrigin = "anonymous";
-        this.data = null;
+        this.data = null; 
     }
 
     setData(data){  
-        this.data = data.filter(this.convertToBW);
+        /*
+        * Sets data equal to a binary matrix of the image
+        */
+        const luminosity = [0.2126, 0.7152, 0.0722];
+        var newData = []
+        var cumulativeLuminosity = 0; // For RGB
+        var cn = 0; // For tracking whether we're RGB or A
+        for ( let [key,value] of data.entries() ) {
+            var newValue = value;
+            if (typeof(key) == "number") {
+                if (cn % 4 !== 0) { // Ignore alpha ( 4th int )
+                    cumulativeLuminosity = cumulativeLuminosity + value;
+                } else {
+                    cn = 0; // reset
+                    if (cumulativeLuminosity > 0) {
+                        newData.push(1);
+                    } else {
+                        newData.push(0);
+                    } 
+                    cumulativeLuminosity = 0;
+                } 
+            }
+            cn++;
+        };
+        this.data = this.convertToMatrix(newData);
     }
 
-    convertToBW(node){
-        return true;
+    convertToMatrix(flatArray){
+        var matrixArray = flatArray.reduce((rows, key, index) => (index % this.width == 0 ? rows.push([key]) 
+            : rows[rows.length-1].push(key)) && rows, []);
+        return matrixArray
     }
+
+
 }
 
 class matrixCanvas{
@@ -24,12 +70,25 @@ class matrixCanvas{
         this.image = new targetImage(image);
         this.canvas = document.createElement('canvas');
         this.context = this.canvas.getContext("2d");
-        this.rgbmapping = { r: 0.2126, g: 0.7152, b: 0.0722 }; // Gamma values 
 
+        this.getCanvas();
         this.drawImage();
         this.setImageData();
-        this.drawImage();
+        this.demo();
     }
+
+    getMatrix(){
+        return this.image.data;
+    }
+
+    demo(){
+        /* code specifically for running the demo page */
+        this.testCanvas = document.getElementById('demo-canvas');
+        this.testCanvas.appendChild(this.canvas); // append our internal canvas to the document
+        dump(this.image.data);
+    }
+
+
 
     getCanvas(){
         /* Creates a canvas element and adds it to the DOM */
@@ -37,13 +96,12 @@ class matrixCanvas{
         this.canvas.width = this.image.width;
         this.canvas.height = this.image.height;
         this.canvas.style.position = "absolute";
-        this.canvas.style.display = "none";
         const body = document.getElementsByTagName("body")[0];
-        body.appendChild(canvas);
-        return canvas;
+        body.appendChild(this.canvas);
     }
 
     clearCanvas(){
+        this.context.fillStyle = "#ffffff";
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
@@ -52,20 +110,18 @@ class matrixCanvas{
     }
 
     setImageData(){
-        console.log(this.canvas.height, this.image.height);
-        console.log(this.canvas.width, this.image.width);
         var imgData = this.context.getImageData(0,0,this.image.width, this.image.height);
         this.image.setData(imgData.data);
-        console.log(this.image.data);
-        var newImg = new ImageData(this.image.data, this.image.width, this.image.height);
-        console.log(newImg);
-        this.clearCanvas();
-        //this.context.putImageData(newImg, 0, 0);
-        console.log(imgData);
     }
+
+
+
+
 }
 
 function main() {
-new matrixCanvas();
+    var mx = new matrixCanvas();
+    var matrixArray = mx.getMatrix();
+    console.log(matrixArray);
 }
-setTimeout(main, 500);
+setTimeout(main, 500); // Should be a callback when things are ready

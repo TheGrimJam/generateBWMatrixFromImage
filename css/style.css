@@ -1,0 +1,36 @@
+* {
+    box-sizing: border-box;    
+}
+
+canvas {
+    border:2px solid red;
+    display: block;
+} 
+
+#test-output {
+    margin:0 auto;
+    width: 80vw;
+    overflow: scroll;
+    border:1px solid #ccc;
+    padding: 20em;
+}
+
+code { 
+    background: hsl(220, 80%, 90%); 
+}
+
+pre {
+    white-space: pre-wrap;
+    background: hsl(30,80%,90%);
+}
+
+.flex-container {
+    display: flex;     
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-half {
+    border: 1px solid #ccc;
+    padding: 20px;
+}
