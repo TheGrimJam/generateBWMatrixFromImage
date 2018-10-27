@@ -1,13 +1,13 @@
 # Generate a binary matrix grid of an image in JS
 
-### "Why?"
+## "Why?"
 
 ![birds.](img/birdso.gif)
 
 
 To get the data to generate things like this ( using three.js )!
 
-### What is happening
+## What is happening
 
 In the demo.html: an image is pulled from an image, loaded into a canvas, and the image data is processed to reduce RGBA format to a binary value.
 
@@ -19,6 +19,6 @@ What it doesn't do...
 - Work as an unintrusive library that you can pass an image path to, and receive the data back. This is pretty easy, and the only minor hiccup is browser security issues
 
 
-### Contributing
+## Contributing
 
 I couldn't find anything javascript based to do this, if you end up here - Feel free to message or branch if you want to work this into a more sensible/portable library. This is unsuitable for being anywhere near production in the current state.
