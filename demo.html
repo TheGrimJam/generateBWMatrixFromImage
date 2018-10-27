@@ -15,9 +15,12 @@
 				<h5>Source Image</h5>
 				<img class="demo-image" data-image-target src="img/demo_j.png" />
 			</div>
-			<div class="flex-half">
+
+			<div class="flex-half" >
 				<h5>Rendered on canvas</h5>
-				<canvas id="demo-canvas"></canvas>
+				<div id="demo-canvas">
+
+				</div>
 			</div>	
 		</div>
 
@@ -26,4 +29,15 @@
 	</body>
     
     <script src="js/imageMatriceGenerator.js"></script>
+
+	<script>
+		function main() {
+			var mx = new matrixCanvas();
+			mx.demo();
+			var matrixArray = mx.getMatrix();
+			console.log(matrixArray);
+		}
+		setTimeout(main, 500); // Should be a callback when things are ready
+	
+	</script>
 </html>

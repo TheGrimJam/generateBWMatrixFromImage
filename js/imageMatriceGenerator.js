@@ -71,10 +71,9 @@ class matrixCanvas{
         this.canvas = document.createElement('canvas');
         this.context = this.canvas.getContext("2d");
 
-        this.getCanvas();
-        this.drawImage();
-        this.setImageData();
-        this.demo();
+        this.getCanvas(); // build a canvas
+        this.drawImage(); // Put an image on it
+        this.setImageData(); // Process image data
     }
 
     getMatrix(){
@@ -85,22 +84,22 @@ class matrixCanvas{
         /* code specifically for running the demo page */
         this.testCanvas = document.getElementById('demo-canvas');
         this.testCanvas.appendChild(this.canvas); // append our internal canvas to the document
+        this.canvas.style.display = "block";
+        const body = document.getElementById("demo-canvas");
+        body.appendChild(this.canvas);
         dump(this.image.data);
     }
-
-
 
     getCanvas(){
         /* Creates a canvas element and adds it to the DOM */
         this.canvas.id="matrix-canvas";
         this.canvas.width = this.image.width;
         this.canvas.height = this.image.height;
-        this.canvas.style.position = "absolute";
-        const body = document.getElementsByTagName("body")[0];
-        body.appendChild(this.canvas);
+        this.canvas.style.display = "none";
     }
 
-    clearCanvas(){
+    clear(){
+        /* clear the canvas */
         this.context.fillStyle = "#ffffff";
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
@@ -114,14 +113,5 @@ class matrixCanvas{
         this.image.setData(imgData.data);
     }
 
-
-
-
 }
 
-function main() {
-    var mx = new matrixCanvas();
-    var matrixArray = mx.getMatrix();
-    console.log(matrixArray);
-}
-setTimeout(main, 500); // Should be a callback when things are ready
