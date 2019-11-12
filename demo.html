@@ -10,6 +10,7 @@
     <body>
         <h2> Have you ever needed a way to convert an image into black and white via javascript? No? Me either until today.</h2>
 
+		<input type='file' />
 		<div id="input-display" class="flex-container">
 			<div class="flex-half">
 				<h5>Source Image</h5>
@@ -37,7 +38,21 @@
 			var matrixArray = mx.getMatrix();
 			console.log(matrixArray);
 		}
-		setTimeout(main, 500); // Should be a callback when things are ready
 	
+
+		window.addEventListener('load', function() {
+		document.querySelector('input[type="file"]').addEventListener('change', function() {
+			if (this.files && this.files[0]) {
+				var img = document.querySelector('img');  // $('img')[0]
+				img.src = URL.createObjectURL(this.files[0]); // set src to blob url
+				img.onload = imageIsLoaded;
+			}
+		});
+		});
+
+		function imageIsLoaded() { 
+			var preview_image = document.querySelector('.data-image-target');
+			main();
+		}
 	</script>
 </html>
